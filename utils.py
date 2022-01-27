@@ -20,12 +20,20 @@ def transliterate(input_text: str) -> str:
     return translit(input_text, "sr", reversed=True)
 
 def is_alpha(token: str) -> bool:
+    """Checks if the input string is strictly lowercase without numerals.
+
+    Args:
+        token (str): Input text.
+
+    Returns:
+        bool: Result of checking.
+    """    
     import re
     pattern = "^[a-zšđčćž]+$"
     compiled_pattern = re.compile(pattern)
     return bool(compiled_pattern.match(token))
 
-def load_SET_dataset() -> pd.DataFrame:
+def load_SET_dataset():
     """Reads SETimes dataset from web.
 
     Returns:
@@ -35,7 +43,7 @@ def load_SET_dataset() -> pd.DataFrame:
 
     return pd.read_json(url)
 
-def load_twitter_dataset() -> pd.DataFrame:
+def load_twitter_dataset():
     """Reads twitter dataset from web.
 
     Returns:
