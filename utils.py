@@ -75,6 +75,8 @@ def get_N_tokens(N=5000) -> Set[str]:
     df = df.iloc[~df.index.isna(), :]
 
     def filter_token(token: str) -> bool:
+        """Checks if token is longer than 3 characters and has at least 
+        one vowel."""
         token = token.replace(" ", "")
         if len(token) < 3:
             return False
