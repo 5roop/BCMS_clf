@@ -125,4 +125,31 @@ def get_N_tokens(N=5000) -> Set[str]:
     return important_features
 
 
+def read_and_split_file(path: str) -> List[str]:
+    """Reads a text file and returns a list of strings. Every string is a document.
+    Expects the input to be corpus where documents are separated with empty lines.
+    Returns only the words that are lowercase alpha.
+
+    Args:
+        path (str): path of the text file to read.
+
+    Returns:
+        List[str]: list of filtered documents.
+    """
+    texts = list()
+    chunk = ""
+    with open(path, "r") as f:
+        content = f.readlines()
+    for line in content:
+        # Handle splits
+        if line == "\n":
+            texts.append(chunk)
+            chunk = ""
+        # Filter only lowercase alphabetical words:
+        from utils import is_alpha
+        line = line.replace("\n", " ")
+        words = [w if is_alpha(w) else " " for w in line.split(" ")]
+        chunk += " ".join(words)
+    return texts
+
 # %%
