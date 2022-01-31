@@ -48,4 +48,4 @@ In order to not introduce too much bias into the comparison, the classifiers in 
 
 In case the tokenizer generation fails (due to the feature space being too big), we shall have to resort to limiting the number of max tokens to most frequent ones, where perhaps it would make sense to do it incrementally and again check if perhaps some intermediate value doesn't improve the classifier performance.
 
-One noteworthy observation is that the training now takes significantly longer than before.
+One noteworthy observation is that the training now takes significantly longer than before. Since I had problems with memory errors due to too big a vectorizer, I opted for increasing max_features parameter gradually, similarly to what was done in Part 1.
