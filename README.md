@@ -36,8 +36,9 @@ For SETimes I get the following profile:
 
 ![](images/1_linscv_on_setimes_bool_vectorizer.png)
 
+For Twitter the profile is somewhat simmilar: 
 
-
+![](images/1_linscv_on_twitter_bool_vectorizer.png)
 
 # Second part: Without feature selection
 
