@@ -29,3 +29,11 @@ Evaluation dataset - dev+test split,  log micro- macro-F1 and Confusion Matrices
 
 # First part: With feature selection
 
+## Methodology
+In this part I optimize parameter `N`, meaning that I repeatedly generate `N` best tokens, generate a boolean tokenizer with it and train a Linear SVC on web data. The resulting classifier is evaluated on the train split of Twitter and SETimes dataset.
+
+For SETimes I get the following profile:
+
+![](images/1_linscv_on_setimes_bool_vectorizer.png)
+
+
