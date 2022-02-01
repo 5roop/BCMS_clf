@@ -85,7 +85,7 @@ Meeting notes:
 
 ## SVM + CountVectorizer:
 
-no news, stay tuned.
+no news, stay tuned. Preliminary results hint it won't be revolutionary.
 
 ## Fasttext developments
 
@@ -112,3 +112,31 @@ On Twitter dataset I get the following:
        [  2,   3, 229,   2],
        [  2,  23,   0,   9]]
 ```
+
+* Does reverting to the old setup work better? Train for 10 epochs, only other settings are `minn=3` and `maxn=6`. Turns out it does, but marginally. For SETimes:
+
+```
+'eval dataset': 'SETimes', 
+'macroF1': 0.529, 
+'microF1': 0.718, 
+'accuracy': 0.718, 
+'cm': [[ 694, 1856,    0,    6],
+       [   4, 2368,    0,  184],
+       [   0,    0, 2238,   24],
+       [   0,    0,    0,    0]]
+```
+
+and for Twitter:
+
+```
+'eval dataset': 'Twitter', 
+'macroF1': 0.726, 
+'microF1': 0.883, 
+'accuracy': 0.883, 
+'cm': [[ 47,   4,   0,   2],
+       [  3,  34,   0,   8],
+       [  0,   2, 234,   0],
+       [  1,  21,   2,  10]]
+```
+
+* Does increasing the number of epochs in this better setup help? I set `epoch=50` and shall repeat the training and evaluation. No, the metrics are significantly worse this time (SETimes: macro 0.42, micro 0.62, Twitter: macro 0.62, micro 0.79)
