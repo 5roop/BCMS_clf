@@ -56,12 +56,16 @@ Perhaps this would also be an interesting point to add to the paper, the speed-u
 
 In the middle of the night I got the only result that would run; at measly 20k tokens the tokenizer fits in memory, but the results on dev split are abysmal; macro and micro F1 are 0.18 and 0.23 respectively. The full results are as follows:
 
-|     N |   macroF1 |   microF1 |   accuracy | cm                      | dev       |
-|------:|----------:|----------:|-----------:|:------------------------|:----------|
-| 19306 |  0.179935 |  0.230269 |   0.230269 | [[ 556  512 1297  191]  | SET train |
-|       |           |           |            |  [ 748  345 1200  263]  |           |
-|       |           |           |            |  [ 705  233  797  527]  |           |
-|       |           |           |            |  [   0    0    0    0]] |           |
+|     N |  macroF1 |  microF1 | accuracy | cm                     | dev       |
+|------:|---------:|---------:|---------:|:-----------------------|:----------|
+| 19306 | 0.179935 | 0.230269 | 0.230269 | [[ 556  512 1297  191] | SET train |
+|       |          |          |          | [ 748  345 1200  263]  |           |
+|       |          |          |          | [ 705  233  797  527]  |           |
+|       |          |          |          | [   0    0    0    0]] |           |
+| 10000 | 0.187787 | 0.206672 | 0.206672 | [[ 388  402  765 1001] | SET train |
+|       |          |          |          | [ 371  459  760  966]  |           |
+|       |          |          |          | [ 298  522  677  765]  |           |
+|       |          |          |          | [   0    0    0    0]] |           |
 
 With these limitations in mind I opted for a scan in N={20k, 50k, 100k} and used the time to prepare fasttext implementation.
 
@@ -71,3 +75,40 @@ Issues to discuss with Nikola:
 * Linear SVC on character N-grams gets stuck due to the tokenizer being too big. The option here is to limit number of N-grams to O(15k), and still the training is long (last run: >100min for 10k), results are not good.
 * Fasttext is slow (50 epochs takes 30 minutes) and results are all Montenegrin. This means the autotuning will likely also take quite a while.
 * We can guess that any training with transformers will likely be even more difficult and therefore unusable for practical purposes.
+
+Meeting notes:
+* Prompting?
+* Go radical: really small number of features. Maybe fix ngram lengths to only a specific length. Nikola suggests 4. Keep CountVectorizer binary=False
+* Redo fasttext exps. Remove minn and maxn, set minCount=5
+
+# Addendum 2022-02-01T13:30:56
+
+## SVM + CountVectorizer:
+
+no news, stay tuned.
+
+## Fasttext developments
+
+Let me tell you about the massive bug I discovered that would be the star of any entomology collection: I prepared the fasttext formatted files badly and did not separate the instances with new lines, meaning that effectively we were training on only one instance. Once I realised that, I retrained with `minCount=5` and `epoch=10`, the training was fast (40s) and I can deliver the following stellar results:
+```
+'eval dataset': 'SETimes', 
+'macroF1': 0.505, 
+'microF1': 0.697,
+'accuracy': 0.697,
+'cm': [[ 533, 2015,    0,    8],
+       [   2, 2392,    5,  157],
+       [   0,    6, 2218,   38],
+       [   0,    0,    0,    0]]
+```
+
+On Twitter dataset I get the following:
+```
+'eval dataset': 'Twitter',
+'macroF1': 0.719, 
+'microF1': 0.875, 
+'accuracy': 0.875, 
+'cm': [[ 47,   6,   0,   0],
+       [  4,  37,   1,   3],
+       [  2,   3, 229,   2],
+       [  2,  23,   0,   9]]
+```
