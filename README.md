@@ -50,3 +50,24 @@ In order to not introduce too much bias into the comparison, the classifiers in 
 ~~In case the tokenizer generation fails (due to the feature space being too big), we shall have to resort to limiting the number of max tokens to most frequent ones, where perhaps it would make sense to do it incrementally and again check if perhaps some intermediate value doesn't improve the classifier performance.~~ This turned to be a real obstacle. My remediation is described below.
 
 Since I had problems with memory errors due to too big a vectorizer, I opted for increasing max_features parameter gradually, similarly to what was done in Part 1. This took entirely too long, so I scrapped this approach and went with a fixed limit of ~~1e5.~~ Didn't work, after 21min the training hangs. Repeating with smaller number of tokens.
+
+Perhaps this would also be an interesting point to add to the paper, the speed-up of the feature selection approach in comparison to the surface based algorithms.
+
+
+In the middle of the night I got the only result that would run; at measly 20k tokens the tokenizer fits in memory, but the results on dev split are abysmal; macro and micro F1 are 0.18 and 0.23 respectively. The full results are as follows:
+
+|     N |   macroF1 |   microF1 |   accuracy | cm                      | dev       |
+|------:|----------:|----------:|-----------:|:------------------------|:----------|
+| 19306 |  0.179935 |  0.230269 |   0.230269 | [[ 556  512 1297  191]  | SET train |
+|       |           |           |            |  [ 748  345 1200  263]  |           |
+|       |           |           |            |  [ 705  233  797  527]  |           |
+|       |           |           |            |  [   0    0    0    0]] |           |
+
+With these limitations in mind I opted for a scan in N={20k, 50k, 100k} and used the time to prepare fasttext implementation.
+
+Fasttext was set to use 3-6 Char-N-grams and the number of epochs was raised first to 20, producing shit results (all predictions were Montenegrin). Increasing the number of epochs to 50 did nothing.
+
+Issues to discuss with Nikola:
+* Linear SVC on character N-grams gets stuck due to the tokenizer being too big. The option here is to limit number of N-grams to O(15k), and still the training is long, results are not good.
+* Fasttext is slow (50 epochs takes 30 minutes) and results are all Montenegrin. This means the autotuning will likely also take quite a while.
+* We can guess that any training with transformers will likely be even more difficult and therefore unusable for practical purposes.
