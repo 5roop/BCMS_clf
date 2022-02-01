@@ -68,6 +68,6 @@ With these limitations in mind I opted for a scan in N={20k, 50k, 100k} and used
 Fasttext was set to use 3-6 Char-N-grams and the number of epochs was raised first to 20, producing shit results (all predictions were Montenegrin). Increasing the number of epochs to 50 did nothing.
 
 Issues to discuss with Nikola:
-* Linear SVC on character N-grams gets stuck due to the tokenizer being too big. The option here is to limit number of N-grams to O(15k), and still the training is long, results are not good.
+* Linear SVC on character N-grams gets stuck due to the tokenizer being too big. The option here is to limit number of N-grams to O(15k), and still the training is long (last run: >100min for 10k), results are not good.
 * Fasttext is slow (50 epochs takes 30 minutes) and results are all Montenegrin. This means the autotuning will likely also take quite a while.
 * We can guess that any training with transformers will likely be even more difficult and therefore unusable for practical purposes.
