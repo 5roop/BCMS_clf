@@ -108,11 +108,7 @@ Let me tell you about the massive bug I discovered that would be the star of any
 'eval dataset': 'SETimes', 
 'macroF1': 0.505, 
 'microF1': 0.697,
-'accuracy': 0.697,
-'cm': [[ 533, 2015,    0,    8],
-       [   2, 2392,    5,  157],
-       [   0,    6, 2218,   38],
-       [   0,    0,    0,    0]]
+'accuracy': 0.697
 ```
 
 On Twitter dataset I get the following:
@@ -120,11 +116,7 @@ On Twitter dataset I get the following:
 'eval dataset': 'Twitter',
 'macroF1': 0.719, 
 'microF1': 0.875, 
-'accuracy': 0.875, 
-'cm': [[ 47,   6,   0,   0],
-       [  4,  37,   1,   3],
-       [  2,   3, 229,   2],
-       [  2,  23,   0,   9]]
+'accuracy': 0.875
 ```
 
 * Does reverting to the old setup work better? Train for 10 epochs, only other settings are `minn=3` and `maxn=6`. Turns out it does, but marginally. For SETimes:
@@ -132,12 +124,7 @@ On Twitter dataset I get the following:
 ```
 'eval dataset': 'SETimes', 
 'macroF1': 0.529, 
-'microF1': 0.718, 
-'accuracy': 0.718, 
-'cm': [[ 694, 1856,    0,    6],
-       [   4, 2368,    0,  184],
-       [   0,    0, 2238,   24],
-       [   0,    0,    0,    0]]
+'microF1': 0.718
 ```
 
 and for Twitter:
@@ -146,11 +133,6 @@ and for Twitter:
 'eval dataset': 'Twitter', 
 'macroF1': 0.726, 
 'microF1': 0.883, 
-'accuracy': 0.883, 
-'cm': [[ 47,   4,   0,   2],
-       [  3,  34,   0,   8],
-       [  0,   2, 234,   0],
-       [  1,  21,   2,  10]]
 ```
 
 * Does increasing the number of epochs in this better setup help? I set `epoch=50` and shall repeat the training and evaluation. No, the metrics are significantly worse this time (SETimes: macro 0.42, micro 0.62, Twitter: macro 0.62, micro 0.79). Performance at 20 epochs is slighly worse than at 10. I managed to find a marginally better sweetspot at 15 epochs:
