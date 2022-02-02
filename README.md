@@ -85,8 +85,22 @@ Meeting notes:
 
 ## SVM + CountVectorizer:
 
-no news, stay tuned. Preliminary results hint it won't be revolutionary.
+~~no news, stay tuned. Preliminary results hint it won't be revolutionary.~~
 
+It is as suspected. The two best results are far lower than alternatives.
+
+|     N |   macroF1 |   microF1 |   accuracy | cm                      | dev       |
+|------:|----------:|----------:|-----------:|:------------------------|:----------|
+|  5000 | 0.223974  | 0.304177  |  0.304177  | [[ 634  434 1307  181]  | SET train |
+|       |           |           |            |  [ 671  382 1321  182]  |           |
+|       |           |           |            |  [ 636  219 1227  180]  |           |
+|       |           |           |            |  [   0    0    0    0]] |           |
+| 10000 |  0.179591 |  0.347844 |   0.347844 | [[2259  138  143   16]  | SET train |
+|       |           |           |            |  [2182  139  213   22]  |           |
+|       |           |           |            |  [1957  129  167    9]  |           |
+|       |           |           |            |  [   0    0    0    0]] |           |
+
+The setup used: 3-grams only, 
 ## Fasttext developments
 
 Let me tell you about the massive bug I discovered that would be the star of any entomology collection: I prepared the fasttext formatted files badly and did not separate the instances with new lines, meaning that effectively we were training on only one instance. Once I realised that, I retrained with `minCount=5` and `epoch=10`, the training was fast (40s) and I can deliver the following stellar results:
@@ -139,4 +153,24 @@ and for Twitter:
        [  1,  21,   2,  10]]
 ```
 
-* Does increasing the number of epochs in this better setup help? I set `epoch=50` and shall repeat the training and evaluation. No, the metrics are significantly worse this time (SETimes: macro 0.42, micro 0.62, Twitter: macro 0.62, micro 0.79)
+* Does increasing the number of epochs in this better setup help? I set `epoch=50` and shall repeat the training and evaluation. No, the metrics are significantly worse this time (SETimes: macro 0.42, micro 0.62, Twitter: macro 0.62, micro 0.79). Performance at 20 epochs is slighly worse than at 10. I managed to find a marginally better sweetspot at 15 epochs:
+
+```
+'eval dataset': 'SETimes', 
+'macroF1': 0.576, 
+'microF1': 0.764, 
+'accuracy': 0.764, 
+'cm': [[1040, 1511,    0,    5],
+       [   5, 2361,    1,  189],
+       [   0,    1, 2240,   21],
+       [   0,    0,    0,    0]]
+
+'eval dataset': 'Twitter', 
+'macroF1': 0.730, 
+'microF1': 0.880, 
+'accuracy': 0.880, 
+'cm': [[ 48,   2,   0,   3],
+       [  3,  32,   1,   9],
+       [  0,   2, 233,   1],
+       [  1,  18,   4,  11]]
+```
