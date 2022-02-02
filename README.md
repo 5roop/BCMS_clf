@@ -100,7 +100,7 @@ It is as suspected. The two best results are far lower than alternatives.
 |       |           |           |            |  [1957  129  167    9]  |           |
 |       |           |           |            |  [   0    0    0    0]] |           |
 
-The setup used: 3-grams only, 
+The setup used: 3-grams only, binary. The results for non-binary tokenizer are about 60% worse on both metrics.
 ## Fasttext developments
 
 Let me tell you about the massive bug I discovered that would be the star of any entomology collection: I prepared the fasttext formatted files badly and did not separate the instances with new lines, meaning that effectively we were training on only one instance. Once I realised that, I retrained with `minCount=5` and `epoch=10`, the training was fast (40s) and I can deliver the following stellar results:
